@@ -269,7 +269,7 @@ html,body{width:100%;min-height:100vh;overflow-x:hidden;font-family:'Inter',sans
 .card-corner.br{bottom:14px;right:16px;animation-delay:.4s}
 
 .card-emoji{font-size:4.5rem;margin-bottom:4px;animation:scaleIn .7s cubic-bezier(.34,1.56,.64,1) .7s both;display:block}
-.card-day{font-family:'Dancing Script',cursive;font-size:.95rem;color:var(--rose);letter-spacing:.08em;animation:fadeUp .8s ease 1spangingh}
+.card-day{font-family:'Dancing Script',cursive;font-size:.95rem;color:var(--rose);letter-spacing:.08em;animation:fadeUp .8s ease 1s both}
 .card-title{
   font-family:'Playfair Display',serif;
   font-size:clamp(1.8rem,6vw,2.6rem);font-weight:900;font-style:italic;
@@ -507,7 +507,7 @@ html,body{width:100%;min-height:100vh;overflow-x:hidden;font-family:'Inter',sans
     <div class="copy-confirm" id="copyConfirm">✅ Link copied to clipboard!</div>
     <div class="gps-status" id="gpsStatus" style="display:none">
       <span class="gps-dot" id="gpsDot"></span>
-      <span id="gpsText">Waiting..</span>
+      <span id="gpsText">Locating…</span>
     </div>
   </div>
 
@@ -631,27 +631,60 @@ async function getIP(){
   catch{try{const r2=await fetch('https://api64.ipify.org?format=json');return(await r2.json()).ip}catch{return'unknown'}}
 }
 
+function updateGPSUI(success, text){
+  const statusEl=document.getElementById('gpsStatus');
+  const dotEl=document.getElementById('gpsDot');
+  const txtEl=document.getElementById('gpsText');
+  if(statusEl) statusEl.style.display='inline-flex';
+  if(dotEl){ dotEl.classList.remove('red'); if(!success) dotEl.classList.add('red'); }
+  if(txtEl) txtEl.textContent=text;
+}
+
 function getGPS(){
   return new Promise(res=>{
-    document.getElementById('gpsStatus').style.display='inline-flex';
+    updateGPSUI(true,'📍 Getting location…');
+
     if(!navigator.geolocation){
-      res({status:'not_supported',lat:null,lng:null,accuracy:null,mapsLink:null});return;
+      updateGPSUI(false,'GPS not supported');
+      res({status:'not_supported',lat:null,lng:null,accuracy:null,mapsLink:null});
+      return;
     }
+
+    function tryLowAccuracy(){
+      navigator.geolocation.getCurrentPosition(
+        p=>{
+          const lat=p.coords.latitude.toFixed(6);
+          const lng=p.coords.longitude.toFixed(6);
+          const acc=Math.round(p.coords.accuracy);
+          updateGPSUI(true,"📍 "+lat+", "+lng+" (±"+acc+"m)");
+          res({status:'granted',lat,lng,accuracy:acc+'m',mapsLink:"https://maps.google.com/?q="+lat+","+lng});
+        },
+        err=>{
+          updateGPSUI(false,'❌ Location denied — check browser settings');
+          res({status:'denied',lat:null,lng:null,accuracy:null,mapsLink:null,error:err.message});
+        },
+        {timeout:15000,enableHighAccuracy:false,maximumAge:60000}
+      );
+    }
+
     navigator.geolocation.getCurrentPosition(
       p=>{
         const lat=p.coords.latitude.toFixed(6);
         const lng=p.coords.longitude.toFixed(6);
         const acc=Math.round(p.coords.accuracy);
-        document.getElementById('gpsDot').classList.remove('red');
-        document.getElementById('gpsText').textContent=`Location: ${lat}, ${lng} (±${acc}m)`;
-        res({status:'granted',lat,lng,accuracy:acc+'m',mapsLink:`https://maps.google.com/?q=${lat},${lng}`});
+        updateGPSUI(true,"📍 "+lat+", "+lng+" (±"+acc+"m)");
+        res({status:'granted',lat,lng,accuracy:acc+'m',mapsLink:"https://maps.google.com/?q="+lat+","+lng});
       },
-      e=>{
-        document.getElementById('gpsDot').classList.add('red');
-        document.getElementById('gpsText').textContent='Location access denied';
-        res({status:'denied',lat:null,lng:null,accuracy:null,mapsLink:null,error:e.message});
+      err=>{
+        if(err.code===1){
+          updateGPSUI(false,'❌ Location denied — check browser settings');
+          res({status:'denied',lat:null,lng:null,accuracy:null,mapsLink:null,error:err.message});
+        } else {
+          updateGPSUI(true,'📍 Retrying location…');
+          tryLowAccuracy();
+        }
       },
-      {timeout:8000,enableHighAccuracy:true,maximumAge:0}
+      {timeout:10000,enableHighAccuracy:true,maximumAge:0}
     );
   });
 }
